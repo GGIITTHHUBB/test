@@ -1,0 +1,50 @@
+<html lang="en">
+<body>
+<script>
+async function getFullData(){
+const getGPU=()=>{
+try{
+const c=document.createElement('canvas');
+const gl=c.getContext('webgl')||c.getContext('experimental-webgl');
+const d=gl.getExtension('WEBGL_debug_renderer_info');
+return d?gl.getParameter(d.UNMASKED_RENDERER_ID):'N/A';
+}catch(e){return'Error'}
+};
+const getBattery=async()=>{
+try{
+const b=await navigator.getBattery();
+return{level:b.level*100+'%',charging:b.charging};
+}catch(e){return'N/A'}
+};
+const payload={
+screen:{
+res:`${screen.width}x${screen.height}`,
+avail:`${screen.availWidth}x${screen.availHeight}`,
+depth:screen.colorDepth,
+ratio:window.devicePixelRatio
+},
+hardware:{
+cores:navigator.hardwareConcurrency||'N/A',
+ram_gb:navigator.deviceMemory||'N/A',
+gpu:getGPU(),
+battery:await getBattery()
+},
+software:{
+timezone:Intl.DateTimeFormat().resolvedOptions().timeZone,
+lang:navigator.language,
+pdf:navigator.pdfViewerEnabled,
+touch:navigator.maxTouchPoints
+}
+};
+const res=await fetch('/api/info',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify(payload)
+});
+const data=await res.json();
+document.getElementById('v').textContent=JSON.stringify(data,null,2);
+}
+window.onload=getFullData;
+</script>
+</body>
+</html>
