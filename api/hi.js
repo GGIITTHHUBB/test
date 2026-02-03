@@ -21,7 +21,9 @@ export default async function handler(req, res) {
       await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          content: "```json\n" + JSON.stringify(data, null, 2) + "\n```"
+        }),
         keepalive: true
       });
     } catch (err) {}
