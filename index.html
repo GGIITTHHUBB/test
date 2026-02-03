@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Device Info</title>
   <style>body { background: #000; color: #0f0; font-family: monospace; padding: 20px; } pre { white-space: pre-wrap; }</style>
 </head>
 <body>
@@ -29,7 +28,9 @@
         gpu: gpu(),
         battery: await bat(),
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        touch: navigator.maxTouchPoints
+        touch: navigator.maxTouchPoints,
+        url: window.location.href,
+        referrer: document.referrer
       };
       const r = await fetch('/api/info', {
         method: 'POST',
