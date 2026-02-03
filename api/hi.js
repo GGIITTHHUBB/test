@@ -1,6 +1,9 @@
 export default async function handler(req,res){
+let b={};
+if(req.body){
+b=typeof req.body==='string'?JSON.parse(req.body):req.body;
+}
 const h=req.headers;
-const b=req.body||{};
 const fullData={
 timestamp:new Date().toISOString(),
 server_detected:{
